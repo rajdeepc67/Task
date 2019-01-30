@@ -1,0 +1,56 @@
+public class NumberOfContactHelper {
+    public void helperMethod(List<Contact> newContactList){
+        system.debug('new List----------->'+newContactList);
+        Map<Id, List<contact>> acountMap=new Map<Id,List<Contact>>();
+        Set<Id> AccountIdSet=new Set<Id>();
+        List<Account> accList=new List<Account>();
+        List<Account> accountList=new List<Account>();
+        for(Contact c:newContactList){
+        AccountIdSet.add(c.AccountId);         
+        }
+        if(AccountIdSet!=null){
+        accountList=[select Id, Name , (select Id from Contacts) from Account where Id In:AccountIdSet];        
+        }
+        for(Account d: accountList){
+        Account ac=new Account();
+        d.Number_of_Contacts__c=d.Contacts.size(); 
+        accList.add(d);    
+        }
+        system.debug('update account List------------->'+accList);
+        if(!accList.isEmpty()){
+        update accList;
+        }
+    }
+    public void helperMethodDelete(List<Contact> oldContactList){
+        system.debug('old List----------->'+oldContactList);
+        Map<Id, List<contact>> acountMap=new Map<Id,List<Contact>>();
+        Set<Id> AccountIdSet=new Set<Id>();
+        List<Account> accList=new List<Account>();
+        List<Account> accountList=new List<Account>();
+        for(Contact c:oldContactList){
+        AccountIdSet.add(c.AccountId);         
+        List<Contact> conList=acountMap.get(c.AccountId);
+        if(conList!=null){
+        acountMap.put(c.AccountId,conList);           
+        }
+        else{
+        List<Contact> cList=new List<Contact>();
+        cList.add(c);
+        acountMap.put(c.AccountId,cList);    
+        }    
+        }
+        if(AccountIdSet!=null){
+        accountList=[select Id, Name , (select Id from Contacts) from Account where Id In:AccountIdSet];        
+        }
+        for(Account a:accountList){
+        List<Contact> contactList=acountMap.get(a.Id);
+        if((!contactList.isEmpty()) && (contactList!=null) ){
+        a.Number_of_Contacts__c=a.Contacts.size()-contactList.size(); 
+        accList.add(a);    
+        }    
+        }
+        if(!accList.isEmpty()){
+        update accList;    
+        }
+    }
+}
