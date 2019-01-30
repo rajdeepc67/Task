@@ -16,7 +16,8 @@ public class ExampleCallouts {
         System.debug('----------------->'+results);
    
               }
+        return response;      
         }
-        return response;
+       
     }
-}
+    
