@@ -1,0 +1,12 @@
+trigger NumberOfContactTrigger on Contact (after insert,before delete) {
+
+    if(trigger.isAfter && trigger.isInsert){
+        NumberOfContactHelper h=new NumberOfContactHelper();
+        h.helperMethod(trigger.new);
+    }
+    if(trigger.isBefore && trigger.isDelete){
+        system.debug('trigger.old-------->'+trigger.old);
+        NumberOfContactHelper h=new NumberOfContactHelper();
+        h.helperMethodDelete(trigger.old);
+    }
+}
