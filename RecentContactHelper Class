@@ -1,0 +1,11 @@
+public class RecentContactHelper {
+
+     @AuraEnabled
+        public static List<Contact> getContact() {
+        
+        List<Contact> conList=new List<Contact>();
+        
+        conList=[select Name from Contact order by CreatedDate DESC Limit 10];
+            return conList;
+        }
+}
